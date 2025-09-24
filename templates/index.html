@@ -1,0 +1,160 @@
+{% import 'icons.html' as icon %}
+{% import 'components.html' as component %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WiZ Light'er</title>
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
+  <link href="{{ url_for('static', filename='output.css') }}" rel="stylesheet">
+  <script src="{{ url_for('static', filename='htmx.min.js') }}"></script> <!-- HTMX v2.0.7 -->
+</head>
+
+<body class="font-lexend-deca bg-stone-900 overflow-hidden">
+  <div class="h-screen flex flex-col items-center lg:justify-center overflow-hidden p-4">
+    {{ component.dropdown() }}
+
+    {% for bulb in bulbs %}
+    <div class="flex-col gap-5 my-2 w-full lg:max-w-80">
+      <!-- HEADER -->
+      <div class="bg-sky-300 p-2 rounded-t-lg flex items-center justify-around gap-3">
+        {{ icon.bulb() }}
+        <div>
+          <h1>{{ bulb.name }}</h1>
+          <small class="font-light">{{ bulb.ip }}:{{ bulb.port }}</small>
+        </div>
+
+        <label class="inline-flex items-center cursor-pointer">
+          <input name="feature" type="checkbox" hx-post="/" hx-trigger="change" hx-target="feature" hx-swap="outerHTML"
+            class="sr-only peer">
+          <div class="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-red-300
+              peer-checked:after:translate-x-full 
+             rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] 
+             after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border 
+             after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-400">
+          </div>
+        </label>
+
+
+      </div>
+      <!-- BODY -->
+      <div class="relative flex flex-col gap-2 bg-sky-800 p-2 rounded-b-lg">
+
+        <!-- 📄 This is input range form -->
+        <form hx-post="/" hx-trigger="input from:form delay:120ms" hx-target="#vol-value-{{ loop.index }}"
+          hx-swap="textContent" class="absolute">
+          <input type="text" name="id" value="{{ bulb.id }}" hidden>
+
+          <!-- <input type="range" name="brightness" min="10" max="100" step="1" value="30"
+            oninput="changeBoxColorWidth(this, 'bright-{{ bulb.id }}')">
+
+          <input type="range" name="temperature" min="2200" max="6200" step="1" value="3000"
+            oninput="changeBoxColorWidth(this, 'temp-{{ bulb.id }}')">
+
+          <input type="range" name="speed" min="10" max="100" step="1" value="40"
+            oninput="changeBoxColorWidth(this, 'speed-{{ bulb.id }}')"> -->
+        </form>
+
+        <div class="flex gap-2 items-center">
+          {{ icon.brightness() }}
+          <div class="flex items-end w-full h-8 gap-1 bg-linear-to-r from-cyan-500 to-blue-500 rounded-md">
+            <div id="bright-{{ bulb.id }}" class="h-full border-r-8 border-r-white" style="width:40%;">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-2 items-center">
+          {{ icon.temperature() }}
+          <div class="flex items-end w-full h-8 gap-1 bg-linear-to-r from-amber-600 to-sky-200 rounded-md">
+            <div id="temp-{{ bulb.id }}" class="h-full border-r-8 border-r-white" style="width:40%;">
+            </div>
+          </div>
+        </div>
+
+        <div class="relative flex gap-2 items-center">
+          {{ icon.speed() }}
+
+          <div class="flex w-full h-8 gap-1 bg-linear-to-r from-amber-600 to-sky-200 rounded-md">
+            <input type="range" name="speed" min="10" max="100" step="1" value="40"
+              oninput="changeBoxColorWidth(this, 'speeds-{{ bulb.id }}')" class="w-full absolute">
+            <div id="speeds-{{ bulb.id }}" class="h-full border-r-8 border-r-white" style="width:40%;">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          {{ icon.scene() }}
+          <select id="scenes">
+            <option class="red" value="0" selected="" disabled="">Select an option</option>
+            <option value="0" disabled="">---Static Scenes---</option>
+            <option value="6">Cozy</option>
+            <option value="11">Warm White</option>
+            <option value="12">Daylight</option>
+            <option value="13">Cool white</option>
+            <option value="14">Night light</option>
+            <option value="15">Focus</option>
+            <option value="16">Relax</option>
+            <option value="17">True colors</option>
+            <option value="18">TV time</option>
+            <option value="19">Plantgrowth</option>
+            <option value="0" disabled="">---Dynamic Scenes---</option>
+            <option value="1">Ocean</option>
+            <option value="2">Romance</option>
+            <option value="3">Sunset</option>
+            <option value="4">Party</option>
+            <option value="5">Fireplace</option>
+            <option value="7">Forest</option>
+            <option value="8">Pastel Colors</option>
+            <option value="20">Spring</option>
+            <option value="21">Summer</option>
+            <option value="22">Fall</option>
+            <option value="23">Deepdive</option>
+            <option value="24">Jungle</option>
+            <option value="25">Mojito</option>
+            <option value="26">Club</option>
+            <option value="27">Christmas</option>
+            <option value="28">Halloween</option>
+            <option value="29">Candlelight</option>
+            <option value="30">Golden white</option>
+            <option value="31">Pulse</option>
+            <option value="32">Steampunk</option>
+            <option value="0" disabled="">---Miscellaneous---</option>
+            <option value="9">Wake up</option>
+            <option value="10">Bedtime</option>
+            <option value="1000">Rhythm</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+
+
+  </div>
+
+  <script src="{{ url_for('static', filename='service-worker.js') }}"></script>
+  <script>
+
+    function tempMapRange(value, inMin = 2200, inMax = 6200, outMin = 0, outMax = 100) {
+      return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+    }
+
+    function changeBoxColorWidth(slider, boxId) {
+      const box = document.getElementById(boxId);
+      if (boxId.startsWith('temp')) {
+        box.style.width = tempMapRange(slider.value) + "%";
+      } else {
+        box.style.width = slider.value + "%";
+      }
+    }
+
+  </script>
+</body>
+
+</html>
