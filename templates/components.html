@@ -1,29 +1,38 @@
-{% macro dropdown() %}
+{% macro slider(id, name, icon, min, max, value) %}
+<div x-data="sliderBox('{{ id }}', '{{ name }}', {{ min }}, {{ max }}, {{ value }})"
+  class="flex justify-end gap-2 items-center">
+  {% set height = 'h-10'%}
+  {% set class = 'from-amber-600 to-sky-200'
+  if name == 'temperature' else 'from-cyan-500 to-blue-500' %}
 
-<button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
-  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-  type="button">Dropdown button <svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 12 12">
-    <path fill="currentColor"
-      d="M5.214 10.541a.903.903 0 0 0 1.572 0l4.092-7.169C11.226 2.762 10.789 2 10.09 2H1.91c-.698 0-1.135.762-.787 1.372z" />
-  </svg>
-</button>
+  {{ icon }}
 
-<!-- Dropdown menu -->
-<div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
-  <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-    <li>
-      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-    </li>
-    <li>
-      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-    </li>
-    <li>
-      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
-    </li>
-    <li>
-      <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign out</a>
-    </li>
-  </ul>
+  <!-- Slider input -->
+  <input type="range" name="{{ name }}" min="{{ min }}" max="{{ max }}" step="1" x-model="val"
+    class="absolute w-10/12 mx-1 opacity-0 {{ height }}">
+
+  <!-- Colored bar -->
+  <div class="flex w-full {{ height }} gap-1 bg-linear-to-r {{ class }}">
+    <div class="h-full border-r-8 border-r-white" :style="`width: ${percent}%`"></div>
+  </div>
 </div>
+{% endmacro %}
 
+{% macro option(id, name, value, icon) %}
+<div class="w-full text-white">
+  <input type="radio" id="{{ id }}" name="{{ name }}" value="{{ value }}" class="sr-only peer">
+  <label for="{{ id }}"
+    class="opt flex justify-center items-center h-14 peer-checked:bg-pink-700 bg-stone-700 rounded-lg">
+    {{ icon }}
+  </label>
+</div>
+{% endmacro %}
+
+{% macro tab(id, name, value, icon) %}
+<div class="w-full text-white">
+  <input type="radio" id="{{ id }}" name="{{ name }}" value="{{ value }}" x-model="{{ name }}" class="sr-only peer">
+  <label for="{{ id }}" class="opt flex justify-center items-center h-14 peer-checked:bg-pink-700 ">
+    {{ icon }}
+  </label>
+</div>
 {% endmacro %}

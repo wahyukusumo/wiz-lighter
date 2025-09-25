@@ -17,10 +17,11 @@ app.config.from_object(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 
-def send_udp(udp_ip, udp_port, message):
+def send_udp(udp_ip: str, udp_port: int, message: str) -> None:
+    """Send UDP packet to ip:port"""
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        sock.sendto(bytes(message), (udp_ip, udp_port))
+        sock.sendto(message.encode("utf-8"), (udp_ip, udp_port))
     finally:
         sock.close()
 
@@ -33,18 +34,18 @@ def index():
     ]
 
     if request.method == "POST":
-        bulb_id = request.form.get("id")
+        bulb_id = int(request.form.get("id"))
         bulb_state = request.form.get("feature")
-        bulb_brightness = request.form.get("brightness")
-        bulb_temperature = request.form.get("temperature")
+        bulb_brightness = int(request.form.get("brightness"))
+        bulb_speed = int(request.form.get("speed"))
+        bulb_temperature = int(request.form.get("temperature"))
 
-        checked = "checked" if bulb_state == "on" else ""
-        print(checked)
-        return render_template_string(
-            f'<input name="feature" type="checkbox" {checked} '
-            'hx-post="/" hx-trigger="change" hx-target="feature" '
-            'hx-swap="outerHTML" class="sr-only peer">'
-        )
+        bulb = next((b for b in bulbs if b["id"] == bulb_id), None)
+        packet = f'{{"id": 1, "method": "setPilot", "params": {{"temp": {bulb_temperature}, "dimming": {bulb_brightness}}}}}'
+        print(f"{bulb["ip"]}:{bulb["port"]} with message: {str(packet)}")
+
+        send_udp(bulb["ip"], bulb["port"], str(packet))
+        return "", 204
 
     else:
         return render_template("index.html", bulbs=bulbs, version=VERSION)
