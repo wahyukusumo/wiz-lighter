@@ -5,7 +5,7 @@ import socket
 #     "method": "getPilot",
 #     "env": "pro",
 #     "result": {
-#         "mac": "cc40850fac6e",
+#         "mac": "ccccccxxxx",
 #         "rssi": -55,
 #         "state": true,
 #         "sceneId": 0,
@@ -60,31 +60,39 @@ dynamics_mode = [
 
 
 class WiZ:
-    def __init__(self, ip, host, name):
+    def __init__(self, ip, port, name):
         self.ip = ip
-        self.host = host
+        self.port = port
         self.name = name
+        self.timeout = 4.0
+
+    def result(self, result: dict) -> bool:
+        return result["result"]["success"]
 
     @property
-    def status(self) -> str:
+    def status(self) -> dict:
         params = {"method": "getPilot", "params": {}}
         return self.send_udp(params)
 
     @property
-    def turn_off(self) -> str:
+    def turn_off(self) -> dict:
         params = {"id": 1, "method": "setState", "params": {"state": False}}
         return self.send_udp(params)
 
     @property
-    def turn_on(self) -> str:
+    def turn_on(self) -> dict:
         params = {"id": 1, "method": "setState", "params": {"state": True}}
         return self.send_udp(params)
 
-    def set_temperature(self, temp: int, dimming: int) -> str:
+    def set_state(self, state: bool) -> dict:
+        params = {"id": 1, "method": "setState", "params": {"state": state}}
+        return self.send_udp(params)
+
+    def set_temperature(self, temp: int, dimming: int) -> dict:
         params = {"temp": temp, "dimming": dimming}
         return self.generate_code(params)
 
-    def set_scene(self, sceneId: int, speed: int | None, dimming: int) -> str:
+    def set_scene(self, sceneId: int, speed: int | None, dimming: int) -> dict:
         params = {"sceneId": sceneId, "dimming": dimming}
 
         if speed:  # only add if not None / not 0
@@ -92,29 +100,39 @@ class WiZ:
 
         return self.generate_code(params)
 
-    def set_rgb(self, red: int, green: int, blue: int, dimming: int):
+    def set_rgb(self, red: int, green: int, blue: int, dimming: int) -> dict:
         params = {"r": red, "g": green, "b": blue, "dimming": dimming}
         return self.generate_code(params)
 
-    def generate_code(self, params: dict) -> str:
+    def generate_code(self, params: dict) -> dict:
         params = {"id": 1, "method": "setPilot", "params": params}
         return self.send_udp(params)
 
-    def send_udp(self, command: dict) -> str:
+    def send_udp(self, command: dict) -> dict | None:
         command = json.dumps(command).encode("utf-8")
 
         """Send UDP packet to ip:port"""
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.settimeout(self.timeout)
         try:
             # Send UDP packet
-            sock.sendto(command, (self.ip, self.host))
+            sock.sendto(command, (self.ip, self.port))
             # Retrieve data from device
             data, addr = sock.recvfrom(1024)
-            message = data.decode("utf-8")
+            message = json.loads(data.decode("utf-8"))
             return message
+        except socket.timeout:
+            return {
+                "method": "setPilot",
+                "id": 1,
+                "env": "pro",
+                "result": {"success": False},
+            }
         finally:
             sock.close()
 
 
 lamp = WiZ("192.168.0.185", 38899, "Bedroom Bulb")
-print(lamp.set_rgb(3, 3, 4, 10))
+# lamp = WiZ("192.168.0.182", 38822, "Bedroom Bulb")
+# temp = lamp.set_rgb(3, 3, 4, 10)
+print(lamp.status)
