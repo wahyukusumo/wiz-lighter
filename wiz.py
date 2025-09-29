@@ -88,19 +88,21 @@ class WiZ:
         params = {"id": 1, "method": "setState", "params": {"state": state}}
         return self.send_udp(params)
 
-    def set_temperature(self, temp: int, dimming: int) -> dict:
+    def set_temperature(self, temp: int, dimming: int = 30) -> dict:
         params = {"temp": temp, "dimming": dimming}
         return self.generate_code(params)
 
-    def set_scene(self, sceneId: int, speed: int | None, dimming: int) -> dict:
-        params = {"sceneId": sceneId, "dimming": dimming}
+    def set_scene(
+        self, scene_id: int, speed: int | None = None, dimming: int = 30
+    ) -> dict:
+        params = {"sceneId": scene_id, "dimming": dimming}
 
         if speed:  # only add if not None / not 0
             params["speed"] = speed
 
         return self.generate_code(params)
 
-    def set_rgb(self, red: int, green: int, blue: int, dimming: int) -> dict:
+    def set_rgb(self, red: int, green: int, blue: int, dimming: int = 30) -> dict:
         params = {"r": red, "g": green, "b": blue, "dimming": dimming}
         return self.generate_code(params)
 
@@ -132,7 +134,8 @@ class WiZ:
             sock.close()
 
 
-lamp = WiZ("192.168.0.185", 38899, "Bedroom Bulb")
-# lamp = WiZ("192.168.0.182", 38822, "Bedroom Bulb")
-# temp = lamp.set_rgb(3, 3, 4, 10)
-print(lamp.status)
+def main():
+    lamp = WiZ("192.168.0.185", 38899, "Bedroom Bulb")
+    lamp = WiZ("192.168.0.182", 38822, "Bedroom Bulb")
+    temp = lamp.set_scene(scene_id=4, dimming=50)
+    print(temp)
