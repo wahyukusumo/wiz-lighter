@@ -1,16 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap');
 @import "tailwindcss";
 
-@font-face {
+/* @font-face {
     font-family: "Lexend Deca";
     src: url('./LexendDeca-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
-}
+} */
 
 @theme {
     --font-lexend-deca: "Lexend Deca", sans-serif; 
 }
-
+/* 
 button {
     @apply hover:opacity-50 bg-stone-700 p-0.5 rounded-md cursor-pointer
 }
@@ -21,8 +22,15 @@ option {
 
 label.opt {
     @apply w-full flex justify-center cursor-pointer p-2
+} */
+
+.panel {
+    @apply bg-stone-900 rounded-lg m-2 p-4 
 }
 
+.accordion-title {
+    @apply flex w-full items-center justify-between gap-4 p-4 text-left underline-offset-2 focus-visible:underline focus-visible:outline-hidden bg-neutral-900 hover:bg-neutral-900/75 focus-visible:bg-neutral-900/75
+}
 /* input:in-range {
     @apply w-full h-8 opacity-100 cursor-pointer
 } */
