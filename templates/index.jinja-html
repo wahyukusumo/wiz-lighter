@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% import 'icons.html' as icon %}
+{% import 'components.html' as component %}
+
+{% block content %}
+  <div class="h-full bg-zinc-950">
+    <div x-data="{{ status | tojson | safe }}">
+      {% set hxTargetSwap = "hx-target=#satt hx-swap=innerHTML" %}
+
+      <!-- Header -->
+      <div class="grid grid-cols-3">
+        <div class="panel col-span-2 gap-2">
+          <div class="flex justify-between">
+            {{ icon.bulb() }}
+            <span class="me-3 flex items-center text-sm font-medium text-white">
+              <span class="me-1.5 flex h-2.5 w-2.5 shrink-0 rounded-full bg-teal-500"></span>
+              ONLINE
+            </span>
+          </div>
+
+          <select name="bulb-id" id="bulbSelect" class="my-2 w-full rounded-lg border-2 p-2">
+            {% for bulb in bulbs %}
+              <option class="text-black" value="{{ bulb.id }}">{{ bulb.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="panel flex items-center justify-center">
+          <label for="toggle" class="flex h-full w-full items-center justify-center rounded-lg hover:bg-stone-800">
+            {{ icon.power() }}
+          </label>
+          <input type="checkbox"
+                 name="toggle"
+                 id="toggle"
+                 hx-post="/toggle"
+                 hx-trigger="change"
+                 hidden
+                 hx-vals='{"bulb-id": "0"}'
+                 x-model="result.state"
+                 {{ hxTargetSwap }} />
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div x-data="{ selectedAccordionItem: 'One' }" class="flex w-full flex-col gap-2 p-2">
+        {% call component.accordion(icon.temperature(), "Temperature", 'One') %}
+          <form hx-post="/temp"
+                hx-trigger="change"
+                hx-include="#bulbSelect"
+                {{ hxTargetSwap }}
+                class="flex flex-col gap-2">
+            <!-- prettier-ignore -->
+            {{ component.slider(id='temp', name='temperature', min=2200, max=6200, icon=icon.temperature() , value=status.result.temp) }}
+            {{ component.slider(id='bright', name='brightness', icon=icon.brightness() , value=status.result.dimming) }}
+          </form>
+        {% endcall %}
+
+        <!-- prettier-ignore -->
+        {% call component.accordion(icon.scene(), "Scene", 'Two') %}
+          <form hx-post="/scene"
+                hx-trigger="change"
+                hx-include="#bulbSelect"
+                {{ hxTargetSwap }}
+                class="flex flex-col gap-2">
+            <input type="text" name="scene-id" />
+            <!-- prettier-ignore -->
+            {{ component.slider(id='speed', name='speed', icon=icon.speed() , value=status.result.speed) }}
+            {{ component.slider(id='bright', name='brightness', icon=icon.brightness() , value=status.result.dimming) }}
+          </form>
+        {% endcall %}
+
+        <!-- prettier-ignore -->
+        {% call component.accordion(icon.rgb(), "RGB", 'Three') %}
+          <form hx-post="/rbg">
+            <input type="color" name="color" id="color" />
+            {{ component.slider(id='bright', name='brightness', icon=icon.brightness() , value=status.result.dimming) }}
+          </form>
+        {% endcall %}
+
+        {% call component.accordion(icon.rgb(), "Status", 'Four') %}
+          <span id="satt">{{ status }}</span>
+        {% endcall %}
+      </div>
+    </div>
+
+    <!-- <script src="{{ url_for('static', filename='service-worker.js') }}"></script> -->
+    <script src="//unpkg.com/alpinejs" defer></script>
+
+    <script>
+        function sliderBox(id, name, min, max, initial) {
+            return {
+                val: initial,
+                min,
+                max,
+                name,
+                get percent() {
+                    // special case for temperature → remap range
+                    if (name === 'temperature' || id.startsWith('temp')) {
+                        return ((this.val - 2200) * (100 - 0)) / (6200 - 2200) + 0;
+                    }
+                    // otherwise normal percentage
+                    return this.val;
+                },
+            };
+        }
+    </script>
+  </div>
+{% endblock %}
