@@ -1,6 +1,6 @@
-{% extends "base.html" %}
-{% import 'icons.html' as icon %}
-{% import 'components.html' as component %}
+{% extends "base.jinja-html" %}
+{% import 'icons.jinja' as icon %}
+{% import 'components.jinja' as component %}
 
 {% block content %}
   <div class="h-full bg-zinc-950">
@@ -18,7 +18,7 @@
             </span>
           </div>
 
-          <select name="bulb-id" id="bulbSelect" class="my-2 w-full rounded-lg border-2 p-2">
+          <select name="bulb-id" id="bulbSelect">
             {% for bulb in bulbs %}
               <option class="text-black" value="{{ bulb.id }}">{{ bulb.name }}</option>
             {% endfor %}
@@ -41,6 +41,13 @@
         </div>
       </div>
 
+      <div class="flex justify-around">
+        <div class="panel w-full flex items-center justify-center">{{ icon.moon() }}</div>
+        <div class="panel w-full flex items-center justify-center"></div>
+        <div class="panel w-full flex items-center justify-center"></div>
+        <div class="panel w-full flex items-center justify-center"></div>
+      </div>
+
       <!-- Body -->
       <div x-data="{ selectedAccordionItem: 'One' }" class="flex w-full flex-col gap-2 p-2">
         {% call component.accordion(icon.temperature(), "Temperature", 'One') %}
@@ -49,27 +56,31 @@
                 hx-include="#bulbSelect"
                 {{ hxTargetSwap }}
                 class="flex flex-col gap-2">
-            <!-- prettier-ignore -->
-            {{ component.slider(id='temp', name='temperature', min=2200, max=6200, icon=icon.temperature() , value=status.result.temp) }}
+            {{ component.slider(id='temp', name='temperature', min=2200, max=6200, icon=icon.temperature() ,
+            value=status.result.temp) }}
             {{ component.slider(id='bright', name='brightness', icon=icon.brightness() , value=status.result.dimming) }}
           </form>
         {% endcall %}
 
-        <!-- prettier-ignore -->
         {% call component.accordion(icon.scene(), "Scene", 'Two') %}
           <form hx-post="/scene"
                 hx-trigger="change"
                 hx-include="#bulbSelect"
                 {{ hxTargetSwap }}
-                class="flex flex-col gap-2">
-            <input type="text" name="scene-id" />
-            <!-- prettier-ignore -->
-            {{ component.slider(id='speed', name='speed', icon=icon.speed() , value=status.result.speed) }}
+                class="flex flex-col gap-2"
+                x-data="{ selected: '' }">
+            <select name="scene-id" id="scene" x-model="selected">
+              {% for scene in scenes %}
+                <option value="{{ scene.id }}" class="text-black">{{ scene.name }}</option>
+              {% endfor %}
+            </select>
+            <div x-show="selected === 2">
+              {{ component.slider(id='speed', name='speed', icon=icon.speed() , value=status.result.speed) }}
+            </div>
             {{ component.slider(id='bright', name='brightness', icon=icon.brightness() , value=status.result.dimming) }}
           </form>
         {% endcall %}
 
-        <!-- prettier-ignore -->
         {% call component.accordion(icon.rgb(), "RGB", 'Three') %}
           <form hx-post="/rbg">
             <input type="color" name="color" id="color" />
