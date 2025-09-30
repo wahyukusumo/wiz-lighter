@@ -85,8 +85,7 @@ def index():
             "index.jinja-html",
             bulbs=BULBS,
             status=status,
-            dynamics=wiz.dynamics_mode,
-            statics=wiz.static_mode,
+            scenes=wiz.SCENES,
             version=VERSION,
         )
 
