@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template
 from flask_cors import CORS
 import wiz
+import yaml
 
 VERSION = 0.1
 APP_NAME = f"WiZ Light'er v.{VERSION}"
@@ -23,10 +24,12 @@ TEMP = "temperature"
 SPEED = "speed"
 SCENE = "sceneId"
 
-BULBS = [
-    {"id": 0, "name": "Bedroom Bulb", "ip": "192.168.0.185", "port": 38899},
-    {"id": 1, "name": "Outside Bulb", "ip": "192.163.0.185", "port": 40404},
-]
+
+# Open the YAML file in read mode
+with open("config.yaml", "r") as file:
+    data = yaml.safe_load(file)
+
+BULBS = data["bulbs"]
 
 
 def check_if_bulb_online():
@@ -50,44 +53,13 @@ def index():
     )
     status = bulb.status
 
-    if request.method == "POST":
-        bulb_id = int(request.form.get("bulb-id"))
-        bulb_brightness = int(request.form.get("brightness"))
-
-        light_mode = request.form.get("lightMode")
-
-        if light_mode == "mode-temp":
-            bulb_temperature = int(request.form.get("temperature"))
-            params = f'"temp": {bulb_temperature}, "dimming": {bulb_brightness}'
-
-        if light_mode == "mode-scene":
-            scene_type = request.form.get("sceneType")
-            scene_id = int(request.form.get("sceneID"))
-
-            if scene_type == "type-static":
-                params = f'"sceneId":{scene_id},"dimming":{bulb_brightness}'
-            elif scene_type == "type-dynamics":
-                speed = int(request.form.get("speed"))
-                params = (
-                    f'"sceneId":{scene_id},"speed":{speed},"dimming":{bulb_brightness}'
-                )
-
-        packet = wiz.set_params(params)
-
-        bulb = next((b for b in BULBS if b["id"] == bulb_id), None)
-        # print(f"{bulb["ip"]}:{bulb["port"]} with message: {str(packet)}")
-        print(packet)
-        # send_udp(bulb["ip"], bulb["port"], str(packet))
-        return "", 204
-
-    else:
-        return render_template(
-            "index.jinja-html",
-            bulbs=BULBS,
-            status=status,
-            scenes=wiz.SCENES,
-            version=VERSION,
-        )
+    return render_template(
+        "index.jinja-html",
+        bulbs=BULBS,
+        status=status,
+        scenes=wiz.SCENES,
+        version=VERSION,
+    )
 
 
 @app.route("/change", methods=["GET", "POST"])
