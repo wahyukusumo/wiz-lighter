@@ -1,5 +1,4 @@
-import socket
-from flask import Flask, request, render_template, render_template_string
+from flask import Flask, request, render_template
 from flask_cors import CORS
 import wiz
 
@@ -83,7 +82,7 @@ def index():
 
     else:
         return render_template(
-            "index.html",
+            "index.jinja-html",
             bulbs=BULBS,
             status=status,
             dynamics=wiz.dynamics_mode,
