@@ -4,7 +4,7 @@
 
 {% block content %}
   <div class="h-full bg-zinc-950">
-    <div x-data="{{ status | tojson | safe }}">
+    <div x-data='{{ status | tojson | safe }}'>
       {% set hxTargetSwap = "hx-target=#satt hx-swap=innerHTML" %}
 
       <!-- Header -->
@@ -68,13 +68,17 @@
                 hx-include="#bulbSelect"
                 {{ hxTargetSwap }}
                 class="flex flex-col gap-2"
-                x-data="{ selected: '' }">
-            <select name="scene-id" id="scene" x-model="selected">
+                x-data='{ type: null }'>
+            <select name="scene-id" id="scene" @change='type = $event.target.selectedOptions[0].dataset.type'>
               {% for scene in scenes %}
-                <option value="{{ scene.id }}" class="text-black">{{ scene.name }}</option>
+                <option value="{{ scene.id }}"
+                        data-type="{{ scene.type }}"
+                        class="text-black"
+                        {% if scene.id == status['result']['sceneID'] %}selected{% endif %}>{{ scene.name }}</option>
               {% endfor %}
             </select>
-            <div x-show="selected === 2">
+
+            <div x-show="type === 'dynamic'">
               {{ component.slider(id='speed', name='speed', icon=icon.speed() , value=status.result.speed) }}
             </div>
             {{ component.slider(id='bright', name='brightness', icon=icon.brightness() , value=status.result.dimming) }}
@@ -96,6 +100,8 @@
 
     <!-- <script src="{{ url_for('static', filename='service-worker.js') }}"></script> -->
     <script src="//unpkg.com/alpinejs" defer></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <script>
         function sliderBox(id, name, min, max, initial) {

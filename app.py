@@ -30,6 +30,7 @@ with open("config.yaml", "r") as file:
     data = yaml.safe_load(file)
 
 BULBS = data["bulbs"]
+print(BULBS)
 
 
 def check_if_bulb_online():
@@ -40,6 +41,7 @@ def check_if_bulb_online():
 
 def wiz_bulb(id: int):
     bulb = BULBS[id]
+    print(bulb)
     bulb = wiz.WiZ(ip=bulb["ip"], port=bulb["port"], name=bulb["name"])
     return bulb
 
@@ -102,8 +104,7 @@ def scene():
         bulb_id = int(request.form.get("bulb-id"))
         scene_id = int(request.form.get("scene-id"))
         dimming = int(request.form.get("brightness"))
-        speed_form = request.form.get("speed")
-        speed = int(speed_form) if speed_form not in (None, "") else None
+        speed = int(request.form.get("speed"))
 
         bulb = wiz_bulb(bulb_id)
         bulb.set_scene(scene_id=scene_id, speed=speed, dimming=dimming)

@@ -134,6 +134,12 @@ class WiZ:
 
 def main():
     lamp = WiZ("192.168.0.185", 38899, "Bedroom Bulb")
-    lamp = WiZ("192.168.0.182", 38822, "Bedroom Bulb")
-    temp = lamp.set_scene(scene_id=4, dimming=50)
+    # lamp = WiZ("192.168.0.182", 38822, "Bedroom Bulb")
+    temp = lamp.set_scene(scene_id=14, speed=10, dimming=50)
     print(temp)
+    # lamp.turn_off
+    # print(lamp.status)
+
+
+if __name__ == "__main__":
+    main()
