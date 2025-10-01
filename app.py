@@ -32,12 +32,6 @@ with open("config.yaml", "r") as file:
 BULBS = data["bulbs"]
 
 
-def check_if_bulb_online():
-    for bulb in BULBS:
-        wiz = wiz_bulb[bulb["id"]]
-        wiz.status
-
-
 def wiz_bulb(id: int):
     bulb = BULBS[id]
     bulb = wiz.WiZ(ip=bulb["ip"], port=bulb["port"], name=bulb["name"])

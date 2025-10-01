@@ -26,13 +26,13 @@
         </div>
 
         <div class="panel flex items-center justify-center">
+          <!-- Button Toggle ON/OFF -->
           <button name="toggle"
                   class="flex h-full w-full items-center justify-center rounded-lg hover:bg-stone-800"
                   id="toggle"
                   hx-post="/toggle"
                   hx-trigger="click"
-                  hx-vals='{"bulb-id": "0"}'
-                  x-model="result.state"
+                  hx-include="#bulbSelect"
                   {{ hxTargetSwap }}>
             {{ icon.power() }}
           </button>
@@ -41,6 +41,7 @@
 
       <!-- Body -->
       <div x-data="{ selectedAccordionItem: 'One' }" class="flex w-full flex-col gap-2 p-2">
+        <!-- TEMPERATURE -->
         {% call component.accordion(icon.temperature(), "Temperature", 'One') %}
           <form hx-post="/temp"
                 hx-trigger="change"
@@ -53,6 +54,7 @@
           </form>
         {% endcall %}
 
+        <!-- SCENE -->
         {% call component.accordion(icon.scene(), "Scene", 'Two') %}
           <form hx-post="/scene"
                 hx-trigger="change"
@@ -60,13 +62,14 @@
                 {{ hxTargetSwap }}
                 class="flex flex-col gap-2"
                 x-data='{ type: null }'>
-            <select name="scene-id" id="scene" @change='type = $event.target.selectedOptions[0].dataset.type'>
-              <option disabled selected>Select an option</option>
+            <select name="scene-id"
+                    id="scene"
+                    x-model="result.sceneId"
+                    @change='type = $event.target.selectedOptions[0].dataset.type'>
               {% for scene in scenes %}
-                <option value="{{ scene.id }}"
-                        data-type="{{ scene.type }}"
-                        class="text-black"
-                        {% if scene.id==status.result.sceneId %}selected{% endif %}>{{ scene.name }}</option>
+                <option value="{{ scene.id }}" data-type="{{ scene.type }}" class="text-black">
+                  {{ scene.name }}
+                </option>
               {% endfor %}
             </select>
 
@@ -77,6 +80,7 @@
           </form>
         {% endcall %}
 
+        <!-- RGB -->
         {% call component.accordion(icon.rgb(), "RGB", 'Three') %}
           <form hx-post="/rbg" class="flex flex-col gap-2">
             <input type="color" name="color" id="color" class="w-full h-10 rounded-lg border-2" value="#00b8db" />
@@ -90,8 +94,8 @@
       </div>
     </div>
 
-    <!-- <script src="{{ url_for('static', filename='service-worker.js') }}"></script> -->
-    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="{{ url_for('static', filename='service-worker.js') }}"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
