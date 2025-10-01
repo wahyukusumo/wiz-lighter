@@ -1,45 +1,23 @@
 {% macro slider(id, name, icon, value, min=10, max=100) %}
-  <div class="flex items-center justify-end gap-2"
+  <div class="relative flex items-center justify-end gap-2"
        x-data="sliderBox('{{ id }}', '{{ name }}', {{ min }}, {{ max }}, {{ value }})">
     {% set height = "h-10" %} {% set class = 'from-amber-600 to-sky-200' if name == 'temperature' else 'from-sky-800
      to-white' %} {{ icon }}
 
-    <!-- Slider input -->
-    <input class="absolute w-10/12 mx-1 opacity-0 {{ height }}"
-           name="{{ name }}"
-           type="range"
-           min="{{ min }}"
-           max="{{ max }}"
-           step="1"
-           x-model="val" />
 
     <!-- Colored bar -->
-    <div class="flex w-full {{ height }} gap-1 bg-linear-to-r {{ class }}">
+    <div class="relative flex w-full {{ height }} gap-1 bg-linear-to-r {{ class }}">
       <div class="h-full border-r-8 border-r-white" :style="`width: ${percent}%`"></div>
+
+      <!-- Slider input -->
+      <input class="absolute w-full opacity-100 {{ height }}"
+             name="{{ name }}"
+             type="range"
+             min="{{ min }}"
+             max="{{ max }}"
+             step="1"
+             x-model="val" />
     </div>
-  </div>
-{% endmacro %}
-
-{% macro option(id, name, value, icon) %}
-  <div class="w-full text-white">
-    <input class="peer sr-only" id="{{ id }}" name="{{ name }}" type="radio" value="{{ value }}" />
-    <label class="opt flex h-14 items-center justify-center truncate rounded-lg bg-stone-700 peer-checked:bg-pink-700"
-           for="{{ id }}">{{ icon }}</label>
-  </div>
-{% endmacro %}
-
-<!-- prettier-ignore -->
-{% macro tab(id, name, value, icon) %}
-  <div class="w-full text-white">
-    <input class="peer sr-only"
-           id="{{ id }}"
-           name="{{ name }}"
-           type="radio"
-           value="{{ value }}"
-           x-model="{{ name }}" />
-    <label class="opt flex h-14 items-center justify-center truncate peer-checked:bg-pink-700" for="{{ id }}">
-      {{ icon }}
-    </label>
   </div>
 {% endmacro %}
 

@@ -70,11 +70,12 @@
                 class="flex flex-col gap-2"
                 x-data='{ type: null }'>
             <select name="scene-id" id="scene" @change='type = $event.target.selectedOptions[0].dataset.type'>
+              <option disabled selected>Select an option</option>
               {% for scene in scenes %}
                 <option value="{{ scene.id }}"
                         data-type="{{ scene.type }}"
                         class="text-black"
-                        {% if scene.id == status['result']['sceneID'] %}selected{% endif %}>{{ scene.name }}</option>
+                        {% if scene.id==status.result.sceneId %}selected{% endif %}>{{ scene.name }}</option>
               {% endfor %}
             </select>
 
@@ -86,13 +87,13 @@
         {% endcall %}
 
         {% call component.accordion(icon.rgb(), "RGB", 'Three') %}
-          <form hx-post="/rbg">
-            <input type="color" name="color" id="color" />
+          <form hx-post="/rbg" class="flex flex-col gap-2">
+            <input type="color" name="color" id="color" class="w-full h-10 rounded-lg border-2" value="#00b8db" />
             {{ component.slider(id='bright', name='brightness', icon=icon.brightness() , value=status.result.dimming) }}
           </form>
         {% endcall %}
 
-        {% call component.accordion(icon.rgb(), "Status", 'Four') %}
+        {% call component.accordion(icon.status(), "Status", 'Four') %}
           <span id="satt">{{ status }}</span>
         {% endcall %}
       </div>
