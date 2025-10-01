@@ -26,26 +26,17 @@
         </div>
 
         <div class="panel flex items-center justify-center">
-          <label for="toggle" class="flex h-full w-full items-center justify-center rounded-lg hover:bg-stone-800">
+          <button name="toggle"
+                  class="flex h-full w-full items-center justify-center rounded-lg hover:bg-stone-800"
+                  id="toggle"
+                  hx-post="/toggle"
+                  hx-trigger="click"
+                  hx-vals='{"bulb-id": "0"}'
+                  x-model="result.state"
+                  {{ hxTargetSwap }}>
             {{ icon.power() }}
-          </label>
-          <input type="checkbox"
-                 name="toggle"
-                 id="toggle"
-                 hx-post="/toggle"
-                 hx-trigger="change"
-                 hidden
-                 hx-vals='{"bulb-id": "0"}'
-                 x-model="result.state"
-                 {{ hxTargetSwap }} />
+          </button>
         </div>
-      </div>
-
-      <div class="flex justify-around">
-        <div class="panel w-full flex items-center justify-center">{{ icon.moon() }}</div>
-        <div class="panel w-full flex items-center justify-center"></div>
-        <div class="panel w-full flex items-center justify-center"></div>
-        <div class="panel w-full flex items-center justify-center"></div>
       </div>
 
       <!-- Body -->

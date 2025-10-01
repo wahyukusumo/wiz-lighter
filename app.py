@@ -30,7 +30,6 @@ with open("config.yaml", "r") as file:
     data = yaml.safe_load(file)
 
 BULBS = data["bulbs"]
-print(BULBS)
 
 
 def check_if_bulb_online():
@@ -41,7 +40,6 @@ def check_if_bulb_online():
 
 def wiz_bulb(id: int):
     bulb = BULBS[id]
-    print(bulb)
     bulb = wiz.WiZ(ip=bulb["ip"], port=bulb["port"], name=bulb["name"])
     return bulb
 
@@ -49,10 +47,7 @@ def wiz_bulb(id: int):
 @app.route("/", methods=["GET", "POST"])
 def index():
 
-    default_bulb = BULBS[0]
-    bulb = wiz.WiZ(
-        ip=default_bulb["ip"], port=default_bulb["port"], name=default_bulb["name"]
-    )
+    bulb = wiz_bulb(0)
     status = bulb.status
 
     return render_template(
@@ -76,10 +71,14 @@ def change_bulb():
 def toggle():
     if request.method == "POST":
         bulb_id = int(request.form.get("bulb-id"))
-        bulb_state = True if request.form.get("toggle") == "on" else False
+        # bulb_state = True if request.form.get("toggle") == "on" else False
 
         bulb = wiz_bulb(bulb_id)
-        bulb.set_state(bulb_state)
+        status = bulb.status
+        if status["result"]["state"]:
+            bulb.set_state(False)
+        else:
+            bulb.set_state(True)
 
         # return "", 204
         return bulb.status
