@@ -18,7 +18,7 @@
             </span>
           </div>
 
-          <select name="bulb-id" id="bulbSelect">
+          <select name="bulb-id" id="bulbSelect" hx-get="">
             {% for bulb in bulbs %}
               <option class="text-black" value="{{ bulb.id }}">{{ bulb.name }}</option>
             {% endfor %}
@@ -89,7 +89,12 @@
         {% endcall %}
 
         {% call component.accordion(icon.status(), "Status", 'Four') %}
-          <span id="satt">{{ status }}</span>
+          <span id="satt">{{ status | tojson }}</span>
+        {% endcall %}
+
+        {% call component.accordion(icon.info(), "About", 'Five') %}
+          <p>wiz-lighter-v{{ version }}</p>
+          <a href="https://github.com/wahyukusumo/wiz-lighter">github</a>
         {% endcall %}
       </div>
     </div>

@@ -3,7 +3,7 @@ from flask_cors import CORS
 import wiz
 import yaml
 
-VERSION = 0.1
+VERSION = 0.5
 APP_NAME = f"WiZ Light'er v.{VERSION}"
 DEBUG = True
 HOST = "0.0.0.0"

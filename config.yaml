@@ -3,8 +3,3 @@ bulbs:
     name: Bedroom bulbs
     ip: 192.168.0.185
     port: 38899
-
-  - id: 1
-    name: Front bulbs
-    ip: 192.168.0.185
-    port: 101010
