@@ -128,6 +128,9 @@ class WiZ:
                 "env": "pro",
                 "result": {"success": False},
             }
+        except Exception as e:
+            print(f"UDP error: {e}")
+            return None
         finally:
             sock.close()
 
