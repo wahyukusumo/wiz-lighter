@@ -1,3 +1,4 @@
+port: 5005
 bulbs:
   - id: 0
     name: Bedroom bulbs
