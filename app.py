@@ -1,35 +1,9 @@
-from flask import Flask, request, render_template
-from flask_cors import CORS
+from flask import request, render_template
+from config import *
 import wiz
-import yaml
 
-VERSION = 0.5
-APP_NAME = f"WiZ Light'er v.{VERSION}"
-DEBUG = True
-HOST = "0.0.0.0"
-PORT = 5080
-
-# instantiate the app
-app = Flask(APP_NAME)
-app.config.from_object(__name__)
-
-
-# enable CORS
-CORS(app, resources={r"/*": {"origins": "*"}})
-
-
-# HTML NAME
-ID = "bulb-id"
-TEMP = "temperature"
-SPEED = "speed"
-SCENE = "sceneId"
-
-
-# Open the YAML file in read mode
-with open("config.yaml", "r") as file:
-    data = yaml.safe_load(file)
-
-BULBS = data["bulbs"]
+PORT = config["port"]
+BULBS = config["bulbs"]
 
 
 def wiz_bulb(id: int):
@@ -38,7 +12,7 @@ def wiz_bulb(id: int):
     return bulb
 
 
-@app.route("/", methods=["GET", "POST"])
+@flaskapp.route("/", methods=["GET", "POST"])
 def index():
 
     bulb = wiz_bulb(0)
@@ -53,7 +27,7 @@ def index():
     )
 
 
-@app.route("/change", methods=["GET", "POST"])
+@flaskapp.route("/change", methods=["GET", "POST"])
 def change_bulb():
     bulb_id = int(request.form.get("bulb-id"))
     bulb = wiz_bulb((bulb_id))
@@ -61,7 +35,7 @@ def change_bulb():
     return bulb.status
 
 
-@app.route("/toggle", methods=["GET", "POST"])
+@flaskapp.route("/toggle", methods=["GET", "POST"])
 def toggle():
     if request.method == "POST":
         bulb_id = int(request.form.get("bulb-id"))
@@ -78,7 +52,7 @@ def toggle():
         return bulb.status
 
 
-@app.route("/temp", methods=["GET", "POST"])
+@flaskapp.route("/temp", methods=["GET", "POST"])
 def temp():
     if request.method == "POST":
         bulb_id = int(request.form.get("bulb-id"))
@@ -91,7 +65,7 @@ def temp():
         return bulb.status
 
 
-@app.route("/scene", methods=["GET", "POST"])
+@flaskapp.route("/scene", methods=["GET", "POST"])
 def scene():
     if request.method == "POST":
         bulb_id = int(request.form.get("bulb-id"))
@@ -105,16 +79,30 @@ def scene():
         return bulb.status
 
 
+@flaskapp.route("/rgb", methods=["GET", "POST"])
+def colors():
+    if request.method == "POST":
+        bulb_id = int(request.form.get("bulb-id"))
+        color = request.form.get("color").lstrip("#")
+        dimming = int(request.form.get("brightness"))
+
+        red, green, blue = tuple(int(color[i : i + 2], 16) for i in (0, 2, 4))
+        bulb = wiz_bulb(bulb_id)
+        bulb.set_rgb(red=red, green=green, blue=blue, dimming=dimming)
+
+        return bulb.status
+
+
 def run_prod_server():
     from waitress import serve
 
-    print(APP_NAME)
-    print(f"✅ App is running at http://{HOST}:{PORT}")
-    serve(app, host=HOST, port=PORT)
+    print(NAMEVER)
+    print(f"🚀 App is running at http://{HOST}:{PORT}")
+    serve(flaskapp, host=HOST, port=PORT)
 
 
 def run_dev_server():
-    app.run(host=HOST, port=PORT, use_reloader=True, debug=DEBUG)
+    flaskapp.run(host=HOST, port=PORT, use_reloader=True, debug=True)
 
 
 if __name__ == "__main__":
