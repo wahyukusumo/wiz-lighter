@@ -1,18 +1,1 @@
-{
-  "name": "WiZ Light Interface",
-  "short_name": "WiZ Light Interface",
-  "icons": [
-    {
-      "src": "favicon/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "favicon/android-chrome-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "start_url": "/",
-  "display": "standalone"
-}
+{"name":"WiZ Light'er","short_name":"WiZ Light'er","icons":[{"src":"favicon/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"favicon/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"start_url":"/","display":"standalone"}

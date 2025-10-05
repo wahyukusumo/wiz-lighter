@@ -105,5 +105,5 @@ def run_dev_server():
     flaskapp.run(host=HOST, port=PORT, use_reloader=True, debug=True)
 
 
-if __name__ == "__main__":
-    run_dev_server()
+# if __name__ == "__main__":
+#     run_dev_server()
