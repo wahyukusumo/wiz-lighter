@@ -1,11 +1,17 @@
+<p align="center">
+  <img src=".media/icon.webp" width="20%" />
+</p>
+
 # WiZ Light'er
 
 This is no nonsense WiZ bulb controller web app based on Flask. Just simple and lightweight, can use it in PC or your mobile devices. No telemetry, no ads, no account. Just click the button to send UDP to the bulb and done.
 
-I make this program because WiZ official app become unreliable, it will take a long time just to connect to my lamp. After I found out that the program actually just sending UDP to the bulb, I start making this program.
+I make this program because WiZ official app become unreliable, it will take a long time just to connect to my lamp, sometimes it connect but mostly won't. 
+
+When Im doing research for alternative program, I found out that the program actually just sending UDP to the bulb so I just start making this program myself.
 
 
-[Thanks for Sean Mcnally for compiling the UDP codes.](https://seanmcnally.net/wiz-config.html)
+[List of WiZ UDP commands by Sean Mcnally](https://seanmcnally.net/wiz-config.html)
 
 ### Demo
 
@@ -17,8 +23,7 @@ I make this program because WiZ official app become unreliable, it will take a l
 
 ### Alternative
 - [pywizlight](https://github.com/sbidy/pywizlight)
-- Standard UDP mobile app 
-  If you just want simple mobile app to control your bulb
+- You can use any UDP app in your mobile, and you can just cutomize button with your favorite command. 
 
 
 ### Installation
