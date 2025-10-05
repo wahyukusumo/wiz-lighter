@@ -44,12 +44,12 @@ When Im doing research for alternative program, I found out that the program act
 3. Open terminal and use compile it using _pyinstaller_
 ##### With [UPX](https://github.com/upx/upx)
 ```python
-pyinstaller --onefile --noconsole --add-data 'icon.png:.' --add-data 'templates:templates' --add-data 'static:static' --icon=icon.ico --name="WinVol-Network" --clean --upx-dir C:\upx main.py
+pyinstaller --onefile --noconsole --add-data 'icon.png:.' --add-data 'templates:templates' --add-data 'static:static' --icon=icon.ico --name="WiZ-Lighter" --clean --upx-dir C:\upx main.py
 ```
 
 ##### Without [UPX](https://github.com/upx/upx)
 ```python
-pyinstaller --onefile --noconsole --add-data 'icon.png:.' --add-data 'templates:templates' --add-data 'static:static' --icon=icon.ico --name="WinVol-Network" --clean main.py
+pyinstaller --onefile --noconsole --add-data 'icon.png:.' --add-data 'templates:templates' --add-data 'static:static' --icon=icon.ico --name="WiZ-Lighter" --clean main.py
 ```
 
 
