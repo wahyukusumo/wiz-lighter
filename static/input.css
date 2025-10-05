@@ -16,6 +16,6 @@
   @apply m-2 rounded-lg bg-stone-900 p-4;
 }
 
-select {
+select, input[type='text'] {
   @apply my-2 w-full rounded-lg border-2 p-2;
 }

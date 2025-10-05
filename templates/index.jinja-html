@@ -82,17 +82,32 @@
 
         <!-- RGB -->
         {% call component.accordion(icon.rgb(), "RGB", 'Three') %}
-          <form hx-post="/rbg" class="flex flex-col gap-2">
+          <form hx-post="/rgb" hx-trigger="change" hx-include="#bulbSelect" {{ hxTargetSwap }} class="flex flex-col gap-2">
             <input type="color" name="color" id="color" class="w-full h-10 rounded-lg border-2" value="#00b8db" />
             {{ component.slider(id='bright', name='brightness', icon=icon.brightness() , value=status.result.dimming) }}
           </form>
         {% endcall %}
+<!-- 
+        {% call component.accordion(icon.add(), "Add bulb", 'Four') %}
+        <form action="">
+          <input type="text" placeholder="Bulb name">
+          <div class="grid grid-cols-3 gap-2">
+            <input type="text" class="col-span-2" placeholder="IP Address">
+            <input type="text" class="col-span-1" placeholder="Port">
+          </div>
+          <button type="button" class="p-2 my-2 float-right bg-stone-950 hover:bg-stone-800 border-2 border-white rounded-lg">Submit</button>
+        </form>
+        {% endcall %}
 
-        {% call component.accordion(icon.status(), "Status", 'Four') %}
+         {% call component.accordion(icon.bulbs(), "Bulbs list", 'Five') %}
+         {{ bulbs }}
+        {% endcall %} -->
+
+        {% call component.accordion(icon.status(), "Status", 'Six') %}
           <span id="satt">{{ status | tojson }}</span>
         {% endcall %}
 
-        {% call component.accordion(icon.info(), "About", 'Five') %}
+        {% call component.accordion(icon.info(), "About", 'Seven') %}
           <p>wiz-lighter-v{{ version }}</p>
           <a href="https://github.com/wahyukusumo/wiz-lighter">github</a>
         {% endcall %}

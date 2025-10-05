@@ -12,13 +12,12 @@
     --color-teal-500: oklch(70.4% 0.14 182.503);
     --color-sky-200: oklch(90.1% 0.058 230.902);
     --color-sky-800: oklch(44.3% 0.11 240.79);
-    --color-pink-700: oklch(52.5% 0.223 3.958);
     --color-zinc-900: oklch(21% 0.006 285.885);
     --color-zinc-950: oklch(14.1% 0.005 285.823);
     --color-neutral-900: oklch(20.5% 0 0);
-    --color-stone-700: oklch(37.4% 0.01 67.558);
     --color-stone-800: oklch(26.8% 0.007 34.298);
     --color-stone-900: oklch(21.6% 0.006 56.043);
+    --color-stone-950: oklch(14.7% 0.004 49.25);
     --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
@@ -193,17 +192,23 @@
   .static {
     position: static;
   }
+  .col-span-1 {
+    grid-column: span 1 / span 1;
+  }
   .col-span-2 {
     grid-column: span 2 / span 2;
+  }
+  .float-right {
+    float: right;
   }
   .mx-auto {
     margin-inline: auto;
   }
+  .my-2 {
+    margin-block: calc(var(--spacing) * 2);
+  }
   .ms-2 {
     margin-inline-start: calc(var(--spacing) * 2);
-  }
-  .me-1 {
-    margin-inline-end: calc(var(--spacing) * 1);
   }
   .me-1\.5 {
     margin-inline-end: calc(var(--spacing) * 1.5);
@@ -220,12 +225,6 @@
   .grid {
     display: grid;
   }
-  .hidden {
-    display: none;
-  }
-  .table {
-    display: table;
-  }
   .size-5 {
     width: calc(var(--spacing) * 5);
     height: calc(var(--spacing) * 5);
@@ -237,9 +236,6 @@
   .size-18 {
     width: calc(var(--spacing) * 18);
     height: calc(var(--spacing) * 18);
-  }
-  .h-2 {
-    height: calc(var(--spacing) * 2);
   }
   .h-2\.5 {
     height: calc(var(--spacing) * 2.5);
@@ -253,14 +249,8 @@
   .h-full {
     height: 100%;
   }
-  .w-2 {
-    width: calc(var(--spacing) * 2);
-  }
   .w-2\.5 {
     width: calc(var(--spacing) * 2.5);
-  }
-  .w-64 {
-    width: calc(var(--spacing) * 64);
   }
   .w-full {
     width: 100%;
@@ -268,14 +258,8 @@
   .max-w-96 {
     max-width: calc(var(--spacing) * 96);
   }
-  .flex-shrink {
-    flex-shrink: 1;
-  }
   .shrink-0 {
     flex-shrink: 0;
-  }
-  .border-collapse {
-    border-collapse: collapse;
   }
   .rotate-180 {
     rotate: 180deg;
@@ -291,9 +275,6 @@
   }
   .items-center {
     align-items: center;
-  }
-  .justify-around {
-    justify-content: space-around;
   }
   .justify-between {
     justify-content: space-between;
@@ -322,10 +303,6 @@
   .rounded-sm {
     border-radius: var(--radius-sm);
   }
-  .border {
-    border-style: var(--tw-border-style);
-    border-width: 1px;
-  }
   .border-2 {
     border-style: var(--tw-border-style);
     border-width: 2px;
@@ -333,6 +310,9 @@
   .border-r-8 {
     border-right-style: var(--tw-border-style);
     border-right-width: 8px;
+  }
+  .border-white {
+    border-color: var(--color-white);
   }
   .border-r-white {
     border-right-color: var(--color-white);
@@ -342,6 +322,9 @@
   }
   .bg-stone-900 {
     background-color: var(--color-stone-900);
+  }
+  .bg-stone-950 {
+    background-color: var(--color-stone-950);
   }
   .bg-teal-500 {
     background-color: var(--color-teal-500);
@@ -405,21 +388,11 @@
   .text-white {
     color: var(--color-white);
   }
-  .underline {
-    text-decoration-line: underline;
-  }
   .underline-offset-2 {
     text-underline-offset: 2px;
   }
   .opacity-0 {
     opacity: 0%;
-  }
-  .opacity-100 {
-    opacity: 100%;
-  }
-  .outline {
-    outline-style: var(--tw-outline-style);
-    outline-width: 1px;
   }
   .transition {
     transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events;
@@ -473,7 +446,7 @@
   background-color: var(--color-stone-900);
   padding: calc(var(--spacing) * 4);
 }
-select {
+select, input[type='text'] {
   margin-block: calc(var(--spacing) * 2);
   width: 100%;
   border-radius: var(--radius-lg);
@@ -532,11 +505,6 @@ select {
   syntax: "*";
   inherits: false;
 }
-@property --tw-outline-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
-}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
@@ -551,7 +519,6 @@ select {
       --tw-gradient-via-position: 50%;
       --tw-gradient-to-position: 100%;
       --tw-font-weight: initial;
-      --tw-outline-style: solid;
     }
   }
 }
